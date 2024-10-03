@@ -1,8 +1,11 @@
+import types
+
 
 RECTANGLE = object()
 
 
 def rectangle_init(height, width):
+    types.Sim
     return {
         "type": RECTANGLE,
         "height": height,
@@ -77,7 +80,7 @@ def area(obj):
         raise RuntimeError
 
 
-r2 = solid_rectangle_init('red', 3, 4)
+r2 = solid_rectangle_init("red", 3, 4)
 print(area(r2))
 
 
@@ -95,4 +98,5 @@ print(perimeter(r2))
 # Each function needs full knowledge of every type of object in the program that will ever statisfy the interface, which makes it extremely difficult to make your code modular; you end up getting coupling where the most common object methods have to import and depend on every other module in the whole codebase -- show a diagram of this dependency hell, it's kind of a recursive dependency too; the bottom of the hierarchy that defines area() is what needs to be called by all code that consumes these objects; but that bottom part of the hierarchy also needs to depend on each of the modules
 
 
+# TODO: Add modifications to the object here to show that the object reference is working properly from area()
 

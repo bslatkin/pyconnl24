@@ -28,6 +28,8 @@ Outline:
     - what is a closure
     - what is a bound method
     - simulating objects with closures
+    - object oriented features in python are all a way to reduce boiler plate and repetitive code
+    - how do you implement isinstance?
 - part 3: how do multi-methods work?
 
 
