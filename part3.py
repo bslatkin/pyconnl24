@@ -102,3 +102,47 @@ class PositiveInteger(Integer):
 
 tree3 = Add(PositiveInteger(3), Integer(-1))
 assert calculate(tree3) == 2
+
+
+@singledispatch
+def pretty(node):
+  raise NotImplementedError
+
+@pretty.register(Integer)
+def _(node):
+  return f"{node.value}"
+
+@pretty.register(Add)
+def _(node):
+  return (
+    f"({pretty(node.left)} + "
+    f" {pretty(node.right)})"
+  )
+
+@pretty.register(Multiply)
+def _(node):
+  return (
+    f"({pretty(node.left)} *"
+    f" {pretty(node.right)})"
+  )
+
+@pretty.register(Power)
+def _(node):
+  return (
+    f"({pretty(node.base)} ^"
+    f" {pretty(node.exponent)})"
+  )
+
+
+
+tree4 = Multiply(
+  Integer(2),
+  Power(
+    Integer(10),
+    Add(Integer(3), Integer(4)),
+  )
+)
+
+print(pretty(tree4))
+assert pretty(tree4) == "(2 * (10 ^ (3 + 4)))"
+
