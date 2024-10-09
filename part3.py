@@ -115,7 +115,7 @@ def _(node):
 @pretty.register(Add)
 def _(node):
   return (
-    f"({pretty(node.left)} + "
+    f"({pretty(node.left)} +"
     f" {pretty(node.right)})"
   )
 
