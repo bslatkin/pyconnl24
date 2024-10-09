@@ -64,3 +64,31 @@ tree2 = Add(
 
 
 assert calculate2(tree2) == 12
+
+
+class PositiveInteger(Integer):
+  def __init__(self, value):
+    assert value > 0
+    super().__init__(value)
+
+
+x = PositiveInteger(3)
+
+assert isinstance(x, Integer)
+assert calculate2(x) == 3
+
+
+def pretty(node):
+  if isinstance(node, Integer):
+    return f"{node.value}"
+  elif isinstance(node, Add):
+    return f"({pretty(node.left)} + {pretty(node.right)})"
+  elif isinstance(node, Multiply):
+    return f"({pretty(node.left)} * {pretty(node.right)})"
+  elif isinstance(node, Power):
+    return f"({pretty(node.base)} ^ {pretty(node.exponent)})"
+  else:
+    raise NotImplementedError
+
+
+assert pretty(tree) == "((3 + 5) * (4 + 7))"
