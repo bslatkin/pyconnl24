@@ -18,3 +18,87 @@ my_print(1.23)
 my_print("hello")
 
 
+@singledispatch
+def calculate(node):
+    raise NotImplementedError
+
+
+class Integer:
+  def __init__(self, value):
+    self.value = value
+
+
+class Add:
+  def __init__(self, left, right):
+    self.left = left
+    self.right = right
+
+
+class Multiply:
+  def __init__(self, left, right):
+    self.left = left
+    self.right = right
+
+
+@calculate.register(Integer)
+def _(node):
+    return node.value
+
+
+@calculate.register(Add)
+def _(node):
+  return calculate(node.left) + calculate(node.right)
+
+
+@calculate.register(Multiply)
+def _(node):
+  return calculate(node.left) * calculate(node.right)
+
+
+
+tree = Multiply(
+  Add(
+    Integer(2),
+    Integer(3),
+  ),
+  Integer(4),
+)
+
+
+assert calculate(tree) == 20
+
+
+class Power:
+  def __init__(self, base, exponent):
+    self.base = base
+    self.exponent = exponent
+
+
+@calculate.register(Power)
+def _(node):
+  return (
+    calculate(node.base) **
+    calculate(node.exponent)
+  )
+
+
+tree2 = Add(
+  Power(
+    Integer(2),
+    Integer(3),
+  ),
+  Integer(4),
+)
+
+
+assert calculate(tree2) == 12
+
+
+class PositiveInteger(Integer):
+  def __init__(self, value):
+    assert value > 0
+    super().__init__(value)
+
+
+tree3 = Add(PositiveInteger(3), Integer(-1))
+assert calculate(tree3) == 2
