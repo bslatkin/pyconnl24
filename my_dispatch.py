@@ -34,7 +34,7 @@ def register_helper(dispatch_func):
   def outer(kind):
     def decorator(func):
       register_dispatch(dispatch_func, kind, func)
-      return dispatch_func
+      return func
 
     return decorator
 
