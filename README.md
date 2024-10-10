@@ -1,6 +1,6 @@
-Thanks for coming to my [PyCon NL 2024](https://pycon-nl.org/) talk!
+Thanks for coming to my [PyCon NL 2024](https://pycon-nl.org/) talk! [The slides are here](https://docs.google.com/presentation/d/1YSBBWwQ3HCSizndrov4zvldepnDiHboEEvj49ySge7Q/edit?usp=sharing).
 
-Here's a 35% coupon[^1] for the print or digital verison of *Effective Python: Third Edition*
+Also, here's a 35% coupon[^1] for the print or digital verison of *Effective Python: Third Edition*
 
 **PYCONNL2024**
 
