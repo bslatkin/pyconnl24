@@ -162,7 +162,8 @@ tree = Multiply(
     Add(Integer(4), Integer(7)),
 )
 
-print(my_catamorphism(tree, my_algebra))
+print("Arithmetic")
+print("tree: ", my_catamorphism(tree, my_algebra))
 
 
 # Example 2
@@ -174,7 +175,7 @@ tree2 = Add(
     Integer(4),
 )
 
-print(my_catamorphism(tree2, my_algebra))
+print("tree2:", my_catamorphism(tree2, my_algebra))
 
 # Example 3
 tree3 = Subtract(
@@ -187,7 +188,16 @@ tree3 = Subtract(
     Abs(Integer(-3)),
 )
 
-print(my_catamorphism(tree3, my_algebra))
+print("tree3:", my_catamorphism(tree3, my_algebra))
+
+
+# Example 4
+tree4 = Subtract(
+    Integer(4),
+    Complex(2 - 3j),
+)
+
+print("tree4:", my_catamorphism(tree4, my_algebra))
 
 
 # Defining an algebra for pretty printing
@@ -242,6 +252,121 @@ def pretty_abs(_, value):
 
 
 # Examples
-print(my_catamorphism(tree, pretty_algebra))
-print(my_catamorphism(tree2, pretty_algebra))
-print(my_catamorphism(tree3, pretty_algebra))
+print("Pretty printing")
+print("tree: ", my_catamorphism(tree, pretty_algebra))
+print("tree2:", my_catamorphism(tree2, pretty_algebra))
+print("tree3:", my_catamorphism(tree3, pretty_algebra))
+print("tree4:", my_catamorphism(tree4, pretty_algebra))
+
+
+# Type checker
+@singledispatch
+def type_check_algebra(node, *values):
+    raise NotImplementedError(node, values)
+
+
+@type_check_algebra.register(Value)
+def type_check_value(node, _):
+    if isinstance(node, (Natural, Whole, Integer, Rational)):
+        return Rational
+    elif isinstance(node, (Complex,)):
+        return Complex
+    else:
+        return Irrational
+
+
+@type_check_algebra.register(Add)
+@type_check_algebra.register(Subtract)
+@type_check_algebra.register(Multiply)
+@type_check_algebra.register(Divide)
+@type_check_algebra.register(Power)
+def type_check_most_constraint(_, left, right):
+    if Complex in (left, right):
+        return Complex
+    elif Irrational in (left, right):
+        return Irrational
+    else:
+        return Rational
+
+
+@type_check_algebra.register(Negate)
+@type_check_algebra.register(Abs)
+def type_check_passthrough(_, value):
+    return value
+
+
+@type_check_algebra.register(Sqrt)
+def type_check_sqrt(_, value):
+    return Irrational
+
+
+# Examples
+print("Type check")
+print("tree: ", my_catamorphism(tree, type_check_algebra))
+print("tree2:", my_catamorphism(tree2, type_check_algebra))
+print("tree3:", my_catamorphism(tree3, type_check_algebra))
+print("tree4:", my_catamorphism(tree4, type_check_algebra))
+
+
+# Complexity/Size Analysis
+@singledispatch
+def complexity_algebra(node, *values):
+    raise NotImplementedError(node, values)
+
+
+@complexity_algebra.register(Value)
+def complexity_value(_, value):
+    return 0
+
+
+@complexity_algebra.register(Complex)
+def complexity_value(_, value):
+    return 2
+
+
+@complexity_algebra.register(Add)
+def complexity_add(_, left, right):
+    return 1 + left + right
+
+
+@complexity_algebra.register(Subtract)
+def complexity_subtract(_, left, right):
+    return 1 + left + right
+
+
+@complexity_algebra.register(Multiply)
+def complexity_multiply(_, left, right):
+    return 4 + left + right
+
+
+@complexity_algebra.register(Divide)
+def complexity_divide(_, left, right):
+    return 8 + left + right
+
+
+@complexity_algebra.register(Power)
+def complexity_power(_, left, right):
+    return 16 + left + right
+
+
+@complexity_algebra.register(Negate)
+def complexity_negate(_, value):
+    return 1 + value
+
+
+@complexity_algebra.register(Sqrt)
+def complexity_sqrt(_, value):
+    return 16 + value
+
+
+@complexity_algebra.register(Abs)
+def complexity_abs(_, value):
+    return 2 + value
+
+
+# Examples
+print("Complexity")
+print("tree: ", my_catamorphism(tree, complexity_algebra))
+print("tree2:", my_catamorphism(tree2, complexity_algebra))
+print("tree3:", my_catamorphism(tree3, complexity_algebra))
+print("tree4:", my_catamorphism(tree4, complexity_algebra))
